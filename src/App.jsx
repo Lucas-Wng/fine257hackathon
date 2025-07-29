@@ -13,6 +13,11 @@ function App() {
   const [videoStream, setVideoStream] = useState(null);
   const [chatMessages, setChatMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+  const [showAdBlockerPopup, setShowAdBlockerPopup] = useState(false);
+  const [showSadChild, setShowSadChild] = useState(false);
+  const [showSpinWheel, setShowSpinWheel] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,27 +30,49 @@ function App() {
     window.open("https://www.google.com/maps/search/cookies/", "_blank");
   };
 
-  const meanResponses = [
-    "Fascinating. Tell me more about how little you know.",
-    "You make dial-up internet look fast and useful.",
-    "You really came here to embarrass yourself, huh?",
-    "Bold of you to assume I have the patience for this.",
-    "You're like a broken pencil—pointless.",
-    "Was that supposed to be a thought? Try again.",
-    "You're proof that evolution can go in reverse.",
-    "Somewhere, a village is missing its idiot.",
-    "You're not even wrong—just lost.",
-    "If I had a dollar for every bad idea you had, I'd be rich and annoyed.",
-    "You've achieved the rare feat of being consistently disappointing.",
-    "Even autocorrect gave up on you.",
-    "I'd say you're not making sense, but that would imply you were trying.",
-    "You're not just slow—you're in reverse.",
-    "Did you learn logic from cereal box riddles?",
-    "I've seen AI-generated nonsense more coherent than this.",
-    "You're a walking typo of a human interaction.",
-    "Do you type with your face? That would explain a lot.",
-    "You're like an error message that won't go away.",
-    "Every time you type, an IQ point dies somewhere."
+  const cowFacts = [
+    "Did you know cows can sleep while standing up? They only lie down for deep sleep!",
+    "Cows have best friends and get stressed when separated from them.",
+    "A cow can produce up to 200,000 glasses of milk in her lifetime!",
+    "Cows have excellent memories and can remember faces for years.",
+    "Cows can smell something up to 6 miles away - that's some powerful sniffer!",
+    "Cows have 360-degree panoramic vision, so they can see almost everything around them.",
+    "Cows spend 6-7 hours eating and 8 hours chewing their cud each day.",
+    "Cows can run up to 25 mph - faster than most humans!",
+    "Cows have unique spots, just like human fingerprints.",
+    "Cows can produce up to 125 pounds of saliva per day - that's a lot of spit!",
+    "Cows have four stomachs: rumen, reticulum, omasum, and abomasum.",
+    "Cows can hear both low and high frequency sounds that humans cannot.",
+    "Cows can detect odors up to 5 miles away.",
+    "Cows are social animals and form close bonds with their herd members.",
+    "Cows can recognize their names and respond when called.",
+    "Cows have a strong maternal instinct and will protect their calves fiercely.",
+    "Cows can live up to 20 years, though most dairy cows live 4-6 years.",
+    "Cows can see colors, but they're red-green colorblind.",
+    "Cows have a great sense of balance and rarely fall over.",
+    "Cows can produce up to 50 quarts of saliva daily to help digest their food."
+  ];
+
+  const trollNotifications = [
+    "Nothing happened. Thought you should know.",
+    "Still nothing. Just checking in.",
+    "Yep, still nothing happening here.",
+    "Breaking news: Nothing continues to happen.",
+    "Update: The nothingness persists.",
+    "Just wanted to let you know that nothing is still nothing.",
+    "Status report: Nothing has changed. Nothing continues.",
+    "Alert: Nothing detected. Nothing confirmed.",
+    "This is your nothing update for the day.",
+    "Nothing to report, but here's a notification anyway.",
+    "The void remains empty. As expected.",
+    "Nothing has occurred since the last nothing.",
+    "Still nothing. This is getting exciting.",
+    "Nothing update: Nothing is still nothing.",
+    "Breaking: Nothing continues to be nothing.",
+    "Nothing has happened. Nothing will happen. Nothing is eternal.",
+    "Your daily dose of nothing.",
+    "Nothing report: Nothing is proceeding as planned.",
+    "Nothing continues unabated."
   ];
 
   const handleChatSubmit = (e) => {
@@ -54,9 +81,9 @@ function App() {
       // Add user message
       setChatMessages(prev => [...prev, { text: userInput, isBot: false }]);
       
-      // Add mean bot response
+      // Add cow fact response
       setTimeout(() => {
-        const randomResponse = meanResponses[Math.floor(Math.random() * meanResponses.length)];
+        const randomResponse = cowFacts[Math.floor(Math.random() * cowFacts.length)];
         setChatMessages(prev => [...prev, { text: randomResponse, isBot: true }]);
       }, 500);
       
@@ -116,7 +143,7 @@ function App() {
   };
 
   const handleYouLose = () => {
-    alert("HAHAHA! You blinked first! 😂 You're such a weakling! Can't even handle a simple staring contest! What a loser! 🤡");
+    alert("Oh wow, you blinked. Incredible performance. Truly unmatched focus.");
     // Stop the video stream when contest ends
     if (videoStream) {
       videoStream.getTracks().forEach(track => track.stop());
@@ -125,6 +152,62 @@ function App() {
     setShowStaringContest(false);
     setContestStarted(false);
     setVideoStream(null);
+  };
+
+  const requestNotificationPermission = () => {
+    if ('Notification' in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          // Start sending troll notifications
+          sendTrollNotifications();
+        }
+      });
+    }
+  };
+
+  const sendTrollNotifications = () => {
+    // Send initial notification
+    setTimeout(() => {
+      new Notification('E-Z Search™', {
+        body: 'Nothing happened. Thought you should know.',
+        icon: '/logo.png'
+      });
+    }, 2000);
+
+    // Send periodic troll notifications
+    const notificationInterval = setInterval(() => {
+      const randomNotification = trollNotifications[Math.floor(Math.random() * trollNotifications.length)];
+      new Notification('E-Z Search™', {
+        body: randomNotification,
+        icon: '/logo.png'
+      });
+    }, 5000); // Send every 30 seconds
+
+    // Store the interval ID to clear it later if needed
+    window.trollNotificationInterval = notificationInterval;
+  };
+
+  const handleAdBlockerRefuse = () => {
+    setShowAdBlockerPopup(false);
+    setShowSadChild(true);
+  };
+
+  const handleSadChildClose = () => {
+    setShowSadChild(false);
+  };
+
+  const handleImFeelingLucky = () => {
+    setShowSpinWheel(true);
+  };
+
+  const handleSpinWheel = () => {
+    setIsSpinning(true);
+    // Spin for 3 seconds then redirect to Rick Roll
+    setTimeout(() => {
+      setIsSpinning(false);
+      window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1", "_blank");
+      setShowSpinWheel(false);
+    }, 3000);
   };
 
   // Trigger browser's native location permission prompt on component mount
@@ -151,6 +234,8 @@ function App() {
     setShowCookiePopup(true);
     setShowNewsletterPopup(true);
     setShowChatbot(true);
+    setShowNotificationPopup(true);
+    setShowAdBlockerPopup(true);
     setShowStaringContest(false);
     setContestStarted(false);
     setVideoStream(null);
@@ -183,13 +268,13 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <h1 className="text-4xl font-bold text-blue-600 mb-8">
-        FINE257
+        E-Z-Search™
       </h1>
       <form onSubmit={handleSubmit} className="flex w-full max-w-md">
         <input
           type="text"
           className="flex-1 px-4 py-2 rounded-l border border-gray-300 focus:outline-none"
-          placeholder="Search..."
+          placeholder="E-Z-Search..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -200,6 +285,12 @@ function App() {
           Search
         </button>
       </form>
+      <button
+        onClick={handleImFeelingLucky}
+        className="mt-4 px-6 py-2 bg-gray-600 text-white font-semibold rounded hover:bg-gray-700 transition"
+      >
+        I'm Feeling Lucky
+      </button>
       {showCookiePopup && (
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white p-4 rounded shadow-lg max-w-xs w-full text-center z-50 border border-gray-200">
           <h2 className="text-base font-semibold mb-1">We use cookies</h2>
@@ -260,7 +351,7 @@ function App() {
       {showChatbot && (
         <div className="fixed bottom-4 right-4 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
           <div className="bg-red-600 text-white p-3 rounded-t-lg flex justify-between items-center">
-            <span className="font-semibold">Mean Bot 🤖</span>
+            <span className="font-semibold">E-Z Bot 🤖</span>
             <button 
               onClick={() => setShowChatbot(false)}
               className="text-white hover:text-gray-200"
@@ -298,6 +389,129 @@ function App() {
               </button>
             </div>
           </form>
+        </div>
+      )}
+      {showNotificationPopup && (
+        <div className="fixed top-4 right-4 bg-white p-4 rounded shadow-lg max-w-xs w-full text-center z-50 border border-gray-200">
+          <h2 className="text-base font-semibold mb-1">🔔 Enable Notifications</h2>
+          <p className="mb-3 text-gray-600 text-sm">Get instant updates and important alerts from E-Z Search™!</p>
+          <div className="flex justify-center gap-2">
+            <button
+              onClick={() => {
+                requestNotificationPermission();
+                setShowNotificationPopup(false);
+              }}
+              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm"
+            >
+              Enable
+            </button>
+            <button
+              onClick={() => setShowNotificationPopup(false)}
+              className="px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition text-sm"
+            >
+              Maybe Later
+            </button>
+          </div>
+        </div>
+      )}
+      {showAdBlockerPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">🚫 Ad Blocker Detected</h2>
+              <p className="text-gray-600 mb-6">We've detected that you're using an ad blocker. Please disable it to support our free service and help us continue providing quality content.</p>
+              
+              <div className="space-y-3">
+                <button
+                  className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
+                >
+                  Disable Ad Blocker
+                </button>
+                <button
+                  onClick={handleAdBlockerRefuse}
+                  className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition"
+                >
+                  Refuse
+                </button>
+              </div>
+              
+              <button
+                onClick={() => setShowAdBlockerPopup(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showSadChild && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full flex items-center justify-center text-6xl">
+                  😢
+                </div>
+              </div>
+              <h2 className="text-xl font-bold text-gray-800 mb-2">Little Timmy Doesn't Get Food</h2>
+              <p className="text-gray-600 mb-4">Because you refused to disable your ad blocker, we can't show you our amazing product:</p>
+              <div className="bg-gray-100 p-3 rounded-lg mb-4">
+                <p className="text-sm font-semibold text-gray-800">
+                  Natotela 24in Galvanized Steel Drainage Grate-B125 Heavy Duty Metal Catch Basin Grate for 24" Square Catch Basin, Outdoor Drain Grates for Garage, Sewer, Downspout, Driveway, Factory (23.8x23.8 in)
+                </p>
+              </div>
+              <p className="text-gray-600 mb-4">Little Timmy goes hungry because of people like you who block ads. Think about the children! 😢</p>
+              
+              <button
+                onClick={handleSadChildClose}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+              >
+                I'm Sorry, Close This
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showSpinWheel && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4 text-center">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">🎰 Spin the Wheel! 🎰</h2>
+            
+            <div className="mb-6">
+              <div className="w-64 h-64 mx-auto border-4 border-gray-300 rounded-full relative overflow-hidden">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className={`w-full h-full bg-blue-500 flex items-center justify-center ${isSpinning ? 'animate-spin' : ''}`}>
+                    <div className="text-center text-white font-bold text-lg">
+                      <div className="text-4xl mb-2">🎁</div>
+                      <div>Special Prize!</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-red-600 z-10"></div>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <button
+                onClick={handleSpinWheel}
+                disabled={isSpinning}
+                className={`w-full py-3 px-6 rounded-lg font-semibold transition ${
+                  isSpinning 
+                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                    : 'bg-red-600 text-white hover:bg-red-700'
+                }`}
+              >
+                {isSpinning ? 'Spinning...' : 'SPIN THE WHEEL!'}
+              </button>
+              <button
+                onClick={() => setShowSpinWheel(false)}
+                className="w-full py-2 px-6 bg-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
       {showStaringContest && (
