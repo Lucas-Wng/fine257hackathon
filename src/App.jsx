@@ -23,6 +23,8 @@ function App() {
   const [showSadChild, setShowSadChild] = useState(false);
   const [showSpinWheel, setShowSpinWheel] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
+  const [showCaptcha, setShowCaptcha] = useState(true);
+  const [selectedCaptchaImages, setSelectedCaptchaImages] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -207,6 +209,26 @@ function App() {
     }, 30000);
 
     setSpamInterval(newSpamInterval);
+  };
+
+  const toggleImage = (index) => {
+    if (selectedCaptchaImages.includes(index)) {
+      setSelectedCaptchaImages(
+        selectedCaptchaImages.filter((i) => i !== index)
+      );
+    } else {
+      setSelectedCaptchaImages([...selectedCaptchaImages, index]);
+    }
+  };
+
+  const handleCaptcha = () => {
+    if (selectedCaptchaImages.length === 9) {
+      alert("Correct! You selected all the images with traffic lights!");
+      setShowCaptcha(false);
+    } else {
+      alert("Incorrect! Please try again!");
+      setSelectedCaptchaImages([]);
+    }
   };
 
   const handleCameraPermission = () => {
@@ -480,29 +502,19 @@ function App() {
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
+                🎉 Congratulations 🎉
                 <br />
-                YYYYAAAAAAYYYYY!!!!
-                <br />
-                YOU'VE SUCCESSFULLY SIGNED UP FOR OUR NEWSLETTER
-                <br />
-                YYYYAAAAAAYYYYY!!!!
-                <br />
-                🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
+                You've successfully signed up for our newsletter!
               </h2>
-
+              <p className="text-sm text-gray-500 mb-1">
+                Would you like to unsubscribe?
+              </p>
               <div className="space-y-3">
                 <button
                   onClick={handleSubAction}
                   className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
                 >
-                  Yes
-                </button>
-                <button
-                  onClick={handleSubAction}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-                >
-                  Yes
+                  Unsubscribe
                 </button>
               </div>
             </div>
@@ -811,6 +823,94 @@ function App() {
               >
                 I think so ...
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40">
+        <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white p-6 rounded-lg shadow-xl w-80 border-2 border-yellow-400">
+          <div className="text-center">
+            <div className="bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold mb-2">
+              SPONSORED AD
+            </div>
+
+            <h3 className="text-lg font-bold mb-3">
+              🚀 E-Z Search™ PREMIUM! 🚀
+            </h3>
+
+            <div className="text-base mb-4">
+              <p className="mb-2">✨ No more annoying popups!</p>
+              <p className="mb-2">🔍 Better search results!</p>
+              <p className="mb-2">🤖 Smarter AI chatbot!</p>
+              <p className="mb-2">📧 Less newsletter spam!</p>
+            </div>
+
+            <div className="bg-red-500 text-white px-4 py-3 rounded-full text-base font-bold mb-3">
+              LIMITED TIME: 50% OFF!
+            </div>
+
+            <div className="text-sm line-through text-gray-300 mb-2">
+              Usually $99.99/month
+            </div>
+            <div className="text-2xl font-bold text-yellow-400 mb-4">
+              Now Only $49.99/month!
+            </div>
+
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full bg-yellow-400 text-black py-3 px-6 rounded font-bold hover:bg-yellow-300 transition text-base animate-pulse"
+            >
+              🔥 UPGRADE NOW! 🔥
+            </button>
+
+            <div className="text-sm text-gray-300 mt-3">
+              *Terms and conditions apply. No refunds*
+            </div>
+          </div>
+        </div>
+      </div>
+      {showCaptcha && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-xl w-fit mx-4 overflow-hidden">
+            <div className="bg-blue-500 text-white p-4">
+              <h2 className="text-lg font-medium mb-1">
+                Select all squares with
+              </h2>
+              <h3 className="text-2xl font-bold mb-2">traffic lights</h3>
+              <p className="text-sm opacity-90">
+                If there are none, click skip
+              </p>
+            </div>
+            <div className="bg-gray-100 p-4">
+              <div className="grid grid-cols-3 bg-black border-2 border-gray-200">
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
+                  <div
+                    key={index}
+                    onClick={() => toggleImage(index)}
+                    className={`relative w-20 h-20 bg-black cursor-pointer hover:opacity-80 ${
+                      selectedCaptchaImages.includes(index)
+                        ? "ring-2 ring-blue-500 ring-inset"
+                        : ""
+                    }`}
+                  ></div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gray-50 p-4 flex justify-center">
+              <div className="flex space-x-3">
+                <button
+                  onClick={handleCaptcha}
+                  className="px-6 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition-colors"
+                >
+                  VERIFY
+                </button>
+                <button
+                  onClick={handleCaptcha}
+                  className="px-6 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition-colors"
+                >
+                  SKIP
+                </button>
+              </div>
             </div>
           </div>
         </div>
